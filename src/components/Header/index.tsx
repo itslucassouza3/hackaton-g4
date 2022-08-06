@@ -1,23 +1,46 @@
 import { useState } from "react";
-import { Row, Col, Drawer } from "antd";
+import { Row, Col, Drawer, Dropdown, Menu, Button, Space } from "antd";
 import { withTranslation } from "react-i18next";
 import Container from "../../common/Container";
-import { SvgIcon } from "../../common/SvgIcon";
-import { Button } from "../../common/Button";
 import {
   HeaderSection,
   LogoContainer,
   Burger,
   NotHidden,
-  Menu,
   CustomNavLinkSmall,
   Label,
   Outline,
   Span,
 } from "./styles";
+import { Link } from "react-router-dom";
+import { useUser } from "../../contexts/User";
+
+
+const menu = (
+  <Menu items={[
+    {
+      key: '1',
+      label: (
+        <Link to="/profile">
+          Meu Perfil
+        </Link>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <Link to="/signup">
+          Sair
+        </Link>
+      ),
+    },
+  ]} />
+);
+
 
 const Header = ({ t }: any) => {
   const [visible, setVisibility] = useState(false);
+  const { user } = useUser()
 
   const showDrawer = () => {
     setVisibility(!visible);
@@ -37,23 +60,46 @@ const Header = ({ t }: any) => {
     };
     return (
       <>
-        <CustomNavLinkSmall onClick={() => scrollTo("about")}>
-          <Span>{t("About")}</Span>
-        </CustomNavLinkSmall>
-        <CustomNavLinkSmall onClick={() => scrollTo("mission")}>
-          <Span>{t("Mission")}</Span>
-        </CustomNavLinkSmall>
-        <CustomNavLinkSmall onClick={() => scrollTo("product")}>
-          <Span>{t("Product")}</Span>
-        </CustomNavLinkSmall>
-        <CustomNavLinkSmall
-          style={{ width: "180px" }}
-          onClick={() => scrollTo("contact")}
-        >
-          <Span>
-            <Button>{t("Contact")}</Button>
-          </Span>
-        </CustomNavLinkSmall>
+        {user.candidate ? (
+          <>
+            <CustomNavLinkSmall onClick={() => scrollTo("about")}>
+              <Link to='/joblist'><Span>{t("Vagas")}</Span></Link>
+            </CustomNavLinkSmall>
+            <CustomNavLinkSmall onClick={() => scrollTo("mission")}>
+              <Span>{t("Empresas")}</Span>
+            </CustomNavLinkSmall>
+            <CustomNavLinkSmall onClick={() => scrollTo("product")}>
+              <Link to='/joblist'><Span>{t("Minhas vagas")}</Span></Link>
+            </CustomNavLinkSmall>
+            <CustomNavLinkSmall
+              style={{ width: "180px" }}
+              onClick={() => scrollTo("contact")}
+            >
+
+              <Dropdown overlay={menu}>
+                <img src="https://avatars.githubusercontent.com/u/61891084?v=4" alt="" />
+              </Dropdown>
+            </CustomNavLinkSmall>
+          </>
+        ) : (
+          <>
+            <CustomNavLinkSmall onClick={() => scrollTo("about")}>
+              <Link to='/talentbank'>Banco de talentos</Link>
+            </CustomNavLinkSmall>
+            <CustomNavLinkSmall onClick={() => scrollTo("product")}>
+              <Link to='/huntjobList'>Minhas Vagas</Link>
+            </CustomNavLinkSmall>
+            <CustomNavLinkSmall
+              style={{ width: "180px", cursor: 'pointer' }}
+              onClick={() => scrollTo("contact")}
+            >
+              <Dropdown overlay={menu} >
+                <img src="https://avatars.githubusercontent.com/u/61891084?v=4" alt="" />
+              </Dropdown>
+            </CustomNavLinkSmall>
+          </>
+        )
+        }
       </>
     );
   };
@@ -63,7 +109,7 @@ const Header = ({ t }: any) => {
       <Container>
         <Row justify="space-between">
           <LogoContainer to="/" aria-label="homepage">
-            <SvgIcon src="logo.svg" width="101px" height="64px" />
+            <p>ByeByeGupy</p>
           </LogoContainer>
           <NotHidden>
             <MenuItem />
